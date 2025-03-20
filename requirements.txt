@@ -3,3 +3,5 @@ boto3
 requests
 duckdb
 pymongo
+selenium
+aiohttp
