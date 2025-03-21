@@ -5,3 +5,7 @@ duckdb
 pymongo
 selenium
 aiohttp
+tenacity
+beautifulsoup4
+pandas
+fastparquet
