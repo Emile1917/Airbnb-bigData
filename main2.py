@@ -19,7 +19,7 @@ import hashlib
 conn = Connection_db('data.db')
 #scraper = WebScraper(conn)
 links = conn.get_links()
-dir_path = 'data'
+dir_path = 'data/'
 MB_unit = math.pow(2, 20)
 df = pd.DataFrame(columns=['url','size','last-modified','hash'])
 df['url'] = links
@@ -94,11 +94,15 @@ urls_array = list(chunks(links, offset))
 # Running the main function
 
 if __name__ == '__main__':
-    for urls in urls_array:
+    begin = datetime.datetime.now()
+    print(f"process begin at {begin}")
+    for i , urls in enumerate(urls_array):
+        start_time_thousand = datetime.datetime.now()
+        print(f"-----------------------------------------------")
+        print(f"{i+1} thousand links started at {start_time_thousand}")
         results = asyncio.run(main(urls))
         for url, data in zip(urls, results):
             if data:
-                
                 url_processed = process_url(url)
                 domain = make_dir(str(dir_path)+url_processed['domain'])
                 file = f"{url_processed['country']}-{url_processed['state']}-{url_processed['city']}-{url_processed['date']}-{url_processed['type']}-{url_processed['file']}"
@@ -110,6 +114,14 @@ if __name__ == '__main__':
                 print(f"Downloaded {url} successfully.")
             else:
                 print(f"Failed to download {url}.")
+        stop_time_thousand = datetime.datetime.now()
+        print(f"{i+1} thousand links ended at {stop_time_thousand}")
+        print(f"-----------------------------------------------")
+        print(f"Total process elapsed {stop_time_thousand - start_time_thousand} ")
+          
+    end = datetime.datetime.now()
+    print(f"process ended at {end} ")
+    print(f"Total process elapsed {end - begin} ")
     print(df)
     df.to_parquet(f"{metadata_dir}/meta.parquet")
 
